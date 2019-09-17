@@ -1,4 +1,8 @@
+require 'CSV'
+require './lib/readable'
 class Curator
+  include Readable
+
   attr_reader :photographs, :artists
 
   def initialize
@@ -41,5 +45,21 @@ class Curator
     @photographs.find_all do |photograph|
       find_artist_by_id(photograph.artist_id).country == country
     end
+  end
+
+  def photographs_taken_between(range)
+    @photographs.find_all do |photograph|
+      range.include?(photograph.year.to_i)
+    end
+  end
+
+  def artists_photographs_by_age(artist)
+    photos_by_age = Hash.new
+    artist_photos = @photographs.find_all {|photo| photo.artist_id == artist.id}
+    artist_photos.each do |photo|
+      key = photo.year.to_i - find_artist_by_id(photo.artist_id).born.to_i
+      photos_by_age[key] = photo.name
+    end
+    photos_by_age
   end
 end

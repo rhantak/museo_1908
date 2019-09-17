@@ -26,11 +26,17 @@ class CuratorTest < Minitest::Test
       year: "1967"
     })
     @photo_4 = Photograph.new({
-      id: "4",
+      id: "5",
       name: "Monolith, The Face of Half Dome",
       artist_id: "3",
       year: "1927"
     })
+    @photo_5 = Photograph.new({
+      id: "4",
+      name: "Child with Toy Hand Grenade in Central Park",
+      artist_id: "3",
+      year: "1962"
+      })
     @artist_1 = Artist.new({
       id: "1",
       name: "Henri Cartier-Bresson",
@@ -130,5 +136,20 @@ class CuratorTest < Minitest::Test
 
     assert_equal [@photo_2, @photo_3, @photo_4], @curator.photographs_taken_by_artists_from("United States")
     assert_equal [], @curator.photographs_taken_by_artists_from("Argentina")
+  end
+
+  def test_it_can_identify_photographs_taken_in_a_year_range
+    # I can't figure out how to test these because their object ids don't match
+    # but everything else does
+    @curator.load_photographs("./data/photographs.csv")
+    assert_equal [@photo_1, @photo_5], @curator.photographs_taken_between(1950..1965)
+  end
+
+  def test_it_can_list_an_artists_photographs_by_age
+    @curator.load_photographs("./data/photographs.csv")
+    @curator.load_artists("./data/artists.csv")
+
+    expected = {44=>"Identical Twins, Roselle, New Jersey", 39=>"Child with Toy Hand Grenade in Central Park"}
+    assert_equal expected, @curator.artists_photographs_by_age(@artist_3)
   end
 end
