@@ -139,10 +139,10 @@ class CuratorTest < Minitest::Test
   end
 
   def test_it_can_identify_photographs_taken_in_a_year_range
-    # I can't figure out how to test these because their object ids don't match
-    # but everything else does
     @curator.load_photographs("./data/photographs.csv")
-    assert_equal [@photo_1, @photo_5], @curator.photographs_taken_between(1950..1965)
+    photo_1 = @curator.find_photograph_by_id("1")
+    photo_4 = @curator.find_photograph_by_id("4")
+    assert_equal [photo_1, photo_4], @curator.photographs_taken_between(1950..1965)
   end
 
   def test_it_can_list_an_artists_photographs_by_age

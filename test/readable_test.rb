@@ -24,12 +24,18 @@ class ReadableTest < Minitest::Test
   end
 
   def test_it_can_load_photographs_from_a_csv
-    # I could figure out a better way to test equality without object id
     @curator.load_photographs("./data/photographs.csv")
     assert_equal @photo_1.id, @curator.photographs[0].id
     assert_equal @photo_1.name, @curator.photographs[0].name
     assert_equal @photo_1.artist_id, @curator.photographs[0].artist_id
     assert_equal @photo_1.year, @curator.photographs[0].year
+
+    photo_2 = @curator.find_photograph_by_id("2")
+    photo_3 = @curator.find_photograph_by_id("3")
+
+    assert_equal photo_2, @curator.photographs[1]
+    assert_equal photo_3, @curator.photographs[2]
+
   end
 
   def test_it_can_load_artists_from_a_csv
@@ -39,5 +45,11 @@ class ReadableTest < Minitest::Test
     assert_equal @artist_1.born, @curator.artists[0].born
     assert_equal @artist_1.died, @curator.artists[0].died
     assert_equal @artist_1.country, @curator.artists[0].country
+
+    artist_2 = @curator.find_artist_by_id("2")
+    artist_3 = @curator.find_artist_by_id("3")
+
+    assert_equal artist_2, @curator.artists[1]
+    assert_equal artist_3, @curator.artists[2]
   end
 end
