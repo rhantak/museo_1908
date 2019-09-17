@@ -29,20 +29,12 @@ class Curator
   end
 
   def artists_with_multiple_photographs
-    artist_ids = @photographs.map do |photograph|
-      photograph.artist_id
-    end
-    have_a_photo = []
-    multiple_photos = []
-    artist_ids.each do |artist_id|
-      multiple_photos << artist_id if have_a_photo.include?(artist_id)
-      have_a_photo << artist_id if !have_a_photo.include?(artist_id)
-    end
-    artists = []
-    multiple_photos.each do |artist_id|
-      artists << find_artist_by_id(artist_id)
-    end
-    artists
+    artist_ids = @photographs.map {|photo| photo.artist_id}.uniq
+    artist_ids.map do |artist_id|
+      if @photographs.count{|photo| photo.artist_id == artist_id} > 1
+        find_artist_by_id(artist_id)
+      end
+    end.compact
   end
 
   def photographs_taken_by_artists_from(country)
